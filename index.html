@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Cover Letter Generator</title>
+  <style>
+    body {
+      background-color: #f9f9f9;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #1a1a1a;
+    }
+    form {
+      max-width: 600px;
+      margin: 20px auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+    }
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: 600;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      background: #f1f1f1;
+      color: #333;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 14px;
+      width: 100%;
+      background: #007BFF;
+      color: #fff;
+      font-weight: 600;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056d2;
+    }
+    #output {
+      max-width: 600px;
+      margin: 30px auto;
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>AI Cover Letter Generator</h1>
+  <form id="coverForm">
+    <label for="name">Full Name:</label>
+    <input type="text" id="name" required />
+
+    <label for="jobTitle">Job Title:</label>
+    <input type="text" id="jobTitle" required />
+
+    <label for="company">Company Name:</label>
+    <input type="text" id="company" required />
+
+    <label for="skills">Top Skills or Keywords:</label>
+    <input type="text" id="skills" placeholder="e.g., Python, Leadership, Web Development" />
+
+    <label for="tone">Tone:</label>
+    <select id="tone">
+      <option value="formal">Formal</option>
+      <option value="friendly">Friendly</option>
+      <option value="persuasive">Persuasive</option>
+    </select>
+
+    <label for="notes">Additional Notes (optional):</label>
+    <textarea id="notes" rows="4" placeholder="e.g., I just graduated, I worked on a chatbot project..." ></textarea>
+
+    <button type="submit">Generate Cover Letter</button>
+  </form>
+
+  <div id="output"></div>
+
+  <script>
+    
+  document.getElementById('coverForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const jobTitle = document.getElementById('jobTitle').value;
+    const company = document.getElementById('company').value;
+    const skills = document.getElementById('skills').value;
+    const tone = document.getElementById('tone').value;
+    const notes = document.getElementById('notes').value;
+
+    const prompt = `You are a professional business writer. Write a ${tone} cover letter for a job as ${jobTitle} at ${company}. The applicant's name is ${name}. Highlight their skills: ${skills}. ${notes}`;
+
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: prompt })
+      });
+
+      const data = await response.json();
+      document.getElementById('output').innerText = data.result;
+    } catch (error) {
+      document.getElementById('output').innerText = '❌ Error generating letter. Please try again.';
+      console.error(error);
+    }
+  });
+</script>
+
+  </script>
+
+</body>
+</html>
